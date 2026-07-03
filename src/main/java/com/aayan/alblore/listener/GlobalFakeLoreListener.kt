@@ -95,10 +95,14 @@ class GlobalFakeLoreListener : PacketListenerAbstract(PacketListenerPriority.NOR
             return
         }
 
+        val amount = item.amount
+
         val avg = AveragePrice.getAverage(material, player) ?: run {
             println("No average for: $material")
             return
         }
+
+        val totalAvg = avg * amount
 
         println("Avg: $avg")
         val breakdown = AveragePrice.getPrices(material, player)
@@ -110,14 +114,22 @@ class GlobalFakeLoreListener : PacketListenerAbstract(PacketListenerPriority.NOR
             Component.text("Average Price: ")
                 .color(NamedTextColor.GRAY)
                 .decoration(TextDecoration.ITALIC, false)
-                .append(Component.text("$${NumberUtil.formatNumber(avg)}").color(NamedTextColor.WHITE))
+                .append(Component.text("$${NumberUtil.formatNumber(totalAvg)}").color(NamedTextColor.WHITE))
         )
+        if (amount > 1) {
+            newLines.add(
+                Component.text("  Per item: ")
+                    .color(NamedTextColor.DARK_GRAY)
+                    .decoration(TextDecoration.ITALIC, false)
+                    .append(Component.text("$${NumberUtil.formatNumber(avg)}").color(NamedTextColor.GRAY))
+            )
+        }
         breakdown.forEach { (pluginName, price) ->
             newLines.add(
                 Component.text("  $pluginName: ")
                     .color(NamedTextColor.DARK_GRAY)
                     .decoration(TextDecoration.ITALIC, false)
-                    .append(Component.text("$${NumberUtil.formatNumber(price)}").color(NamedTextColor.GRAY))
+                    .append(Component.text("$${NumberUtil.formatNumber(price * amount)}").color(NamedTextColor.GRAY))
             )
         }
 
