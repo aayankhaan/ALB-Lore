@@ -1,4 +1,5 @@
 name: ALBLore
-version: '${version}'
+version: 1.0.0
 main: com.aayan.alblore.ALBLore
 api-version: '1.21'
+depend: [ALBCore, packetevents]
