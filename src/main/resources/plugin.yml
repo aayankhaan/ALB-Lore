@@ -1,0 +1,4 @@
+name: ALBLore
+version: '${version}'
+main: com.aayan.alblore.ALBLore
+api-version: '1.21'
