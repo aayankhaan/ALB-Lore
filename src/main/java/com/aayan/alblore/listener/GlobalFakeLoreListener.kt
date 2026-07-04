@@ -14,6 +14,7 @@ import io.github.retrooper.packetevents.util.SpigotConversionUtil
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import org.bukkit.Bukkit
+import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.block.ShulkerBox
@@ -29,7 +30,8 @@ class GlobalFakeLoreListener : PacketListenerAbstract(PacketListenerPriority.NOR
     override fun onPacketSend(event: PacketSendEvent) {
         val player = event.user.uuid?.let { Bukkit.getPlayer(it) } ?: return
 
-        val isEnable = PlayerDataUtil.get(player,"ALBLore.IsEnable") as? Boolean ?: true
+        if (player.gameMode == GameMode.CREATIVE) return
+        val isEnable = PlayerDataUtil.get(player, "ALBLore.IsEnable") as? Boolean ?: true
         if (!isEnable) return
 
         when (event.packetType) {
@@ -40,7 +42,7 @@ class GlobalFakeLoreListener : PacketListenerAbstract(PacketListenerPriority.NOR
     }
 
     private fun applyPlayerLore(item: ItemStack, player: Player) {
-        if (item.isEmpty|| shouldIgnore(item)) return
+        if (item.isEmpty|| shouldIgnore(player, item)) return
         val material = Material.matchMaterial(item.type.name.key) ?: return
         val lines = mutableListOf<Component>()
         val isShulker = material.name.contains("SHULKER_BOX")
@@ -85,8 +87,13 @@ class GlobalFakeLoreListener : PacketListenerAbstract(PacketListenerPriority.NOR
         item.setComponent(ComponentTypes.LORE, ItemLore(finalLines))
     }
 
-    fun shouldIgnore(item: ItemStack): Boolean {
+    fun shouldIgnore(player: Player, item: ItemStack): Boolean {
+        if (player.gameMode == GameMode.CREATIVE) return true
         val bukkitItem = SpigotConversionUtil.toBukkitItemStack(item)
-        return bukkitItem.itemMeta?.persistentDataContainer?.get(NO_LORE_KEY, PersistentDataType.STRING) == "true"
+        val meta = bukkitItem.itemMeta ?: return false
+        val container = meta.persistentDataContainer
+
+        return container.has(NO_LORE_KEY, PersistentDataType.BYTE) &&
+                container.get(NO_LORE_KEY, PersistentDataType.BYTE) == 1.toByte()
     }
 }
