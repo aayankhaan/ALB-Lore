@@ -15,11 +15,14 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import org.bukkit.Bukkit
 import org.bukkit.Material
+import org.bukkit.NamespacedKey
 import org.bukkit.block.ShulkerBox
 import org.bukkit.entity.Player
 import org.bukkit.inventory.meta.BlockStateMeta
+import org.bukkit.persistence.PersistentDataType
 
 class GlobalFakeLoreListener : PacketListenerAbstract(PacketListenerPriority.NORMAL) {
+    val NO_LORE_KEY = NamespacedKey("alblore", "no-lore")
     private val MARKER = "§x§a§l§b§l§o§r§e"
     private val plainText = PlainTextComponentSerializer.plainText()
 
@@ -37,7 +40,7 @@ class GlobalFakeLoreListener : PacketListenerAbstract(PacketListenerPriority.NOR
     }
 
     private fun applyPlayerLore(item: ItemStack, player: Player) {
-        if (item.isEmpty) return
+        if (item.isEmpty|| shouldIgnore(item)) return
         val material = Material.matchMaterial(item.type.name.key) ?: return
         val lines = mutableListOf<Component>()
         val isShulker = material.name.contains("SHULKER_BOX")
@@ -80,5 +83,10 @@ class GlobalFakeLoreListener : PacketListenerAbstract(PacketListenerPriority.NOR
         if (isShulker) { finalLines.add(Component.empty()) }
         finalLines.addAll(newLines)
         item.setComponent(ComponentTypes.LORE, ItemLore(finalLines))
+    }
+
+    fun shouldIgnore(item: ItemStack): Boolean {
+        val bukkitItem = SpigotConversionUtil.toBukkitItemStack(item)
+        return bukkitItem.itemMeta?.persistentDataContainer?.get(NO_LORE_KEY, PersistentDataType.STRING) == "true"
     }
 }
