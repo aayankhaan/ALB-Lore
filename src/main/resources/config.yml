@@ -1,0 +1,33 @@
+# ALBLore Configuration
+
+lore:
+  # Shown on items that have a price registered
+  # Placeholders: %price% = total price (respects stack size)
+  #               %per_item% = price per single item (only shown if amount > 1)
+  has-price:
+    - "&#0dff00$ &f%price%"
+
+  # Shown on items with no price registered
+  no-price:
+    - "&cCan't Find Item Price"
+
+  shulker:
+    # Shown on empty shulkers (uses shulker box own price)
+    empty-has-price:
+      - "&fWorth: &#0dff00$%price%"
+
+    # Shown on empty shulkers with no price
+    empty-no-price:
+      - "&cCan't Find Item Price"
+
+    # Shown on shulkers with items inside (some or all priced)
+    has-price:
+      - "&fWorth: &#0dff00$%price%"
+
+    # Shown when shulker has items but none have a price
+    no-price:
+      - "&cCan't Find Item Price"
+
+    # Appended when some items inside had no price
+    partial-price:
+      - "&7(Some items excluded)"

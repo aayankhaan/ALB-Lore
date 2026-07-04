@@ -1,7 +1,9 @@
 package com.aayan.alblore
 
 import com.aayan.albcore.hooks.PacketEventsHook
+import com.aayan.alblore.commands.AdminCommand
 import com.aayan.alblore.listener.GlobalFakeLoreListener
+import com.aayan.alblore.manager.ConfigManager
 import com.github.retrooper.packetevents.PacketEvents
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
@@ -46,6 +48,8 @@ class ALBLore : JavaPlugin() {
         println("$g══════════════════════════════════════════════════════════════$x")
         println()
 
+        ConfigManager.load(this)
+        AdminCommand.register(this)
         PacketEvents.getAPI().eventManager.registerListeners(GlobalFakeLoreListener())
     }
 
