@@ -31,3 +31,7 @@ lore:
     # Appended when some items inside had no price
     partial-price:
       - "&7(Some items excluded)"
+
+messages:
+  enabled: "&7Lore system has been &aenabled&7."
+  disabled: "&7Lore system has been &cdisabled&7."

@@ -19,6 +19,8 @@ object ConfigManager {
     var shulkerHasPrice: List<String> = listOf("&fWorth: &#0dff00$%price%")
     var shulkerNoPrice: List<String> = listOf("&cCan't Find Item Price")
     var shulkerPartialPrice: List<String> = listOf("&7(Some items excluded)")
+    var enabledMessage: String = "&7Lore system has been &aenabled&7."
+    var disabledMessage: String = "&7Lore system has been &cdisabled&7."
 
     fun load(plugin: JavaPlugin) {
         this.plugin = plugin
@@ -35,6 +37,8 @@ object ConfigManager {
         shulkerHasPrice = config.getStringList("lore.shulker.has-price").ifEmpty { shulkerHasPrice }
         shulkerNoPrice = config.getStringList("lore.shulker.no-price").ifEmpty { shulkerNoPrice }
         shulkerPartialPrice = config.getStringList("lore.shulker.partial-price").ifEmpty { shulkerPartialPrice }
+        enabledMessage = config.getString("messages.enabled") ?: enabledMessage
+        disabledMessage = config.getString("messages.disabled") ?: disabledMessage
     }
 
     fun reload(plugin: JavaPlugin) = load(plugin)

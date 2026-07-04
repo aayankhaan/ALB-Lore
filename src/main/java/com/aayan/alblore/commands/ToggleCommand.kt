@@ -3,6 +3,7 @@ package com.aayan.alblore.commands
 import com.aayan.albcore.commands.CommandUtil
 import com.aayan.albcore.utils.MessageUtil
 import com.aayan.albcore.utils.PlayerDataUtil
+import com.aayan.alblore.manager.ConfigManager
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -21,8 +22,8 @@ object ToggleCommand {
 
                 PlayerDataUtil.set(player, path, newState)
 
-                val status = if (newState) "&aenabled" else "&cdisabled"
-                MessageUtil.send(sender, "&7Lore system has been $status&7.")
+                val message = if (newState) ConfigManager.enabledMessage else ConfigManager.disabledMessage
+                MessageUtil.send(sender, message)
                 player.updateInventory()
             }
         }
