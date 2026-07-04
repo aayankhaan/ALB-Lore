@@ -2,6 +2,7 @@ package com.aayan.alblore.listener
 
 import com.aayan.albcore.utils.AveragePrice
 import com.aayan.albcore.utils.NumberUtil
+import com.aayan.albcore.utils.PlayerDataUtil
 import com.aayan.alblore.manager.ConfigManager
 import com.github.retrooper.packetevents.event.*
 import com.github.retrooper.packetevents.protocol.component.ComponentTypes
@@ -24,6 +25,9 @@ class GlobalFakeLoreListener : PacketListenerAbstract(PacketListenerPriority.NOR
 
     override fun onPacketSend(event: PacketSendEvent) {
         val player = event.user.uuid?.let { Bukkit.getPlayer(it) } ?: return
+
+        val isEnable = PlayerDataUtil.get(player,"ALBLore.IsEnable") as? Boolean ?: true
+        if (!isEnable) return
 
         when (event.packetType) {
             PacketType.Play.Server.WINDOW_ITEMS -> WrapperPlayServerWindowItems(event).apply { items = items.map { it?.copy()?.also { i -> applyPlayerLore(i, player) } } }

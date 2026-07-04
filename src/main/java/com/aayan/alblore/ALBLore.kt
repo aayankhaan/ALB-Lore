@@ -2,6 +2,7 @@ package com.aayan.alblore
 
 import com.aayan.albcore.hooks.PacketEventsHook
 import com.aayan.alblore.commands.AdminCommand
+import com.aayan.alblore.commands.ToggleCommand
 import com.aayan.alblore.listener.GlobalFakeLoreListener
 import com.aayan.alblore.manager.ConfigManager
 import com.github.retrooper.packetevents.PacketEvents
@@ -50,6 +51,7 @@ class ALBLore : JavaPlugin() {
 
         ConfigManager.load(this)
         AdminCommand.register(this)
+        ToggleCommand.register(this)
         PacketEvents.getAPI().eventManager.registerListeners(GlobalFakeLoreListener())
     }
 
